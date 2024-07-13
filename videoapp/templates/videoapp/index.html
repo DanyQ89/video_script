@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+</head>
+<body>
+<h1>Главная страница</h1>
+{% if video_url %}
+    <p>Видео успешно сохранено в папку C:/videos!</p>
+{% else %}
+    <p>Для скачивания видео введите текст в формате /video?text=...</p>
+    <p>Для исправной работы программы откройте сайт на Windows</p>
+{% endif %}
+</body>
+</html>

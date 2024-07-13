@@ -51,20 +51,19 @@ def create_video(request):
 
     width, height = 100, 100
 
-    # Replace invalid characters in the timestamp
     name = f"video_{text}_{timestamp}.mp4"
 
     logger.info(f'Creating video file with name: {name}')
 
     out = cv2.VideoWriter(name, cv2.VideoWriter_fourcc(*'mp4v'), 24, (width, height))
 
-    # Define font properties for PIL
+
     need = False
     for i in text:
         if i not in ascii_letters + ' .,/-+=_)(*&^%$#@!~':
             need = True
 
-    font_path = "C:/Windows/Fonts/arial.ttf"  # Ensure you have a suitable font file
+    font_path = "C:/Windows/Fonts/arial.ttf" 
     if need and not os.path.exists(font_path):
         logger.error(f'Font file {font_path} not found')
         return HttpResponse("Font file not found", status=500)
@@ -77,33 +76,33 @@ def create_video(request):
     for t in range(72):
         frame = np.zeros((height, width, 3), dtype=np.uint8)
 
-        # Create a PIL image from the NumPy array
+
         pil_image = Image.fromarray(frame)
         draw = ImageDraw.Draw(pil_image)
 
         x -= 10
 
-        # Draw the text on the PIL image
+
         draw.text((x, y - font_size // 2), text, font=font, fill=(255, 255, 255))
 
-        # Convert the PIL image back to a NumPy array
+
         frame = np.array(pil_image)
 
         out.write(frame)
 
-    out.release()  # Release the VideoWriter
+    out.release()  
 
-    # Check if the file was created
+    
     if not os.path.exists(name):
         logger.error(f'Video file {name} was not created')
         return HttpResponse("Error creating video", status=500)
 
-    # Specify the custom folder
+   
     custom_folder = 'C:/videos'
     if not os.path.exists(custom_folder):
         os.makedirs(custom_folder)
 
-    # Save the video using FileSystemStorage in the custom folder
+    
     fs = FileSystemStorage(location=custom_folder)
     video_file_path = os.path.join(custom_folder, name)
 
@@ -115,7 +114,7 @@ def create_video(request):
         logger.error(f'Error saving video file: {e}')
         return HttpResponse("Error saving video", status=500)
 
-    # Optionally delete the local video file after uploading
+    
     try:
         os.remove(name)
         logger.info(f'Local video file {name} removed')
